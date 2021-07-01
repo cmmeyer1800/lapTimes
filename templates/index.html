@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
-
+    {% for row in data %}
+        <p>{{ row[0] }}</p>
+        <p>{{ row[1] }}</p>
+    {% endfor %}
 </div>
 {% endblock %}
