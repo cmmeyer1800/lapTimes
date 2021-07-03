@@ -30,7 +30,7 @@ db = Datastore()
 
 @app.route('/')
 def index():
-    return str(db.data)
+    return render_template('index.html', data=db.data)
 
 @app.route('/api/submit/time', methods=['POST'])
 def add_data():

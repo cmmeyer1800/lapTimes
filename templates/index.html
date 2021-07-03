@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
-    {% for row in data %}
-        <p>{{ row[0] }}</p>
-        <p>{{ row[1] }}</p>
-    {% endfor %}
+<div class="box is-centered">
+    <table class="table">
+        <tbody>
+            {% for row in data %}
+                <tr>
+                    <td>{{ row['datetime'] }} : {{ row['laptime'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}
