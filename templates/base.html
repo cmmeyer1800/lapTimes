@@ -7,8 +7,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <script>
+      function setData(){
+          let data = {{ data | tojson | safe}};
+          let tableRef = document.getElementById("times_table");
+          for(idx = 0; idx < data.length; idx = idx + 1){
+            var newRow = tableRef.insertRow(-1);
+            var newCell = newRow.insertCell(-1);
+            var newText = document.createTextNode(data[idx]["datetime"]);
+            newCell.appendChild(newText);
+            newCell = newRow.insertCell(-1);
+            newText = document.createTextNode(data[idx]["laptime"]);
+            newCell.appendChild(newText);
+          }
+      }
+  </script>
   </head>
-  <body>
+  <body onload="setData()">
       {% block content %}
       {% endblock %}
   </body>

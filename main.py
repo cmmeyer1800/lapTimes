@@ -1,5 +1,5 @@
 from re import sub
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
 from flask_caching import Cache
 from google.cloud import bigquery
 from datetime import datetime
@@ -24,13 +24,19 @@ class Datastore():
 
     def add_data(self, data):
         time = datetime.now().strftime("%y%m%d-%H%M%S")
-        self.data.append({'datetime':time, 'laptime':data})
+        self.data.append({'datetime':time, 'laptime':   data})
 
 db = Datastore()
 
 @app.route('/')
 def index():
-    return render_template('index.html', data=db.data)
+    data = db.data
+    return render_template('index.html', data=data)
+
+@app.route('/_times')
+def get_times():
+    data = db.data
+    return jsonify(data)
 
 @app.route('/api/submit/time', methods=['POST'])
 def add_data():

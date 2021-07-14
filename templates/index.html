@@ -1,14 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="box is-centered">
-    <table class="table">
+    <table class="table" id="times_table">
         <tbody>
-            {% for row in data %}
-                <tr>
-                    <td>{{ row['datetime'] }} : {{ row['laptime'] }}</td>
-                </tr>
-            {% endfor %}
+            <tr>
+                <th>Date and Time</th>
+                <th>Laptime</th>
+            </tr>
         </tbody>
     </table>
 </div>
+<script type=text/javascript>
+    let current_data = {{ data | tojson | safe}};
+    function get_times(){
+      $.getJSON("_times",
+        function (data) {
+            if(current_data.length < data.length){
+                $('#times_table tr:last').after('<tr> <td>'+ data[data.length-1].datetime +'</td><td>'+ data[data.length-1].laptime +'</td></tr>');
+                current_data.push(data[data.length-1]);
+            }
+        }
+      );
+    }
+    setInterval('get_times()', 1000);
+  </script>
 {% endblock %}
