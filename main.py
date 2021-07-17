@@ -23,7 +23,7 @@ class Datastore():
         self.client.query(query)
 
     def add_data(self, data):
-        time = datetime.now().strftime("%y%m%d-%H%M%S")
+        time = datetime.now().strftime("%m-%d-%y %H:%M:%S")
         self.data.append({'datetime':time, 'laptime':   data})
 
 db = Datastore()
@@ -33,7 +33,7 @@ def index():
     data = db.data
     return render_template('index.html', data=data)
 
-@app.route('/_times')
+@app.route('/_times', methods=['GET'])
 def get_times():
     data = db.data
     return jsonify(data)
