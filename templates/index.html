@@ -1,27 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="box is-centered">
-    <table class="table" id="times_table">
-        <tbody>
-            <tr>
-                <th>Date and Time</th>
-                <th>Laptime</th>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<script type=text/javascript>
-    let current_data = {{ data | tojson | safe}};
-    function get_times(){
-      $.getJSON("_times",
-        function (data) {
-            if(current_data.length < data.length){
-                $('#times_table tr:last').after('<tr> <td>'+ data[data.length-1].datetime +'</td><td>'+ data[data.length-1].laptime +'</td></tr>');
-                current_data.push(data[data.length-1]);
-            }
-        }
-      );
-    }
-    setInterval('get_times()', 1000);
-  </script>
+    <script src=" {{ url_for('static', filename='tabledata.js') }} "></script>
+    <div class="columns">
+        <div class="column is-2"></div>
+        <div class="column is-8">
+            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="lapTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>lap Number</th>
+                        <th>Lap Time</th>
+                        <th>Difference</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                    <tr>
+                        <td>{{ row['date'] }}</td>
+                        <td>{{ row['lap_num'] }}</td>
+                        <td>{{ row['lap_time']/1000 }} seconds</td>
+                        <td
+                        {% if row['difference'] > 0 %}
+                            style="color: green"
+                        {% else %}
+                            style="color: red"
+                        {% endif %}
+                        >{{ row['difference']/1000 }} seconds</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="column is-2"></div>
+    </div>
 {% endblock %}
