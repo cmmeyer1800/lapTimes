@@ -1,74 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="box is-centered">
+    <script src=" {{ url_for('static', filename='tabledata.js') }} "></script>
     <div class="columns">
-        <div class="column is-4"></div>
-        <div class="column is-2">
-            <table class="table" id="times_table">
-                <tbody>
+        <div class="column is-2"></div>
+        <div class="column is-8">
+            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="lapTable">
+                <thead>
                     <tr>
-                        <th>Date and Time</th>
-                        <th>Logged Time</th>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="column is-2">
-            <table class="table" id="split_table">
-                <tbody>
-                    <tr>
-                        <th>Laptime</th>
+                        <th>Date</th>
+                        <th>lap Number</th>
+                        <th>Lap Time</th>
                         <th>Difference</th>
                     </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
                     <tr>
-                        <td>N/A</td>
-                        <td>N/A</td>
+                        <td>{{ row['date'] }}</td>
+                        <td>{{ row['lap_num'] }}</td>
+                        <td>{{ row['lap_time']/1000 }} seconds</td>
+                        <td
+                        {% if row['difference'] > 0 %}
+                            style="color: green"
+                        {% else %}
+                            style="color: red"
+                        {% endif %}
+                        >{{ row['difference']/1000 }} seconds</td>
                     </tr>
-                    <tr>
-                        <td></td>
-                        <td>N/A</td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="column is-4"></div>
+        <div class="column is-2"></div>
     </div>
-</div>
-<script type=text/javascript>
-    let current_data = [];
-
-    function get_times(){
-      $.getJSON("_times",
-        function (data) {
-            if(current_data.length != data.length){
-                for(idx = current_data.length; idx < data.length; idx = idx + 1){
-                    $('#times_table tr:last').after('<tr> <td>'+ data[idx].datetime +'</td><td>'+ (data[idx].laptime/1000) +'</td></tr>');
-                }
-                current_data = data;
-                update_split_table();
-            }
-        }
-      );
-    }
-
-    function update_split_table(){
-        let tableRef = document.getElementById("split_table");
-        var newRow, newCell, newText, change;
-        var difference = 0;
-        var oldDifference = 0;
-        for(idx = 1; idx < current_data.length; idx = idx + 1){
-            oldDifference = difference;
-            difference = current_data[idx].laptime - current_data[idx - 1].laptime;
-            change = difference - oldDifference;
-            newRow = tableRef.insertRow(-1);
-            newCell = newRow.insertCell(-1);
-            newText = document.createTextNode(difference/1000);
-            newCell.appendChild(newText);
-            newCell = newRow.insertCell(-1);
-            newText = document.createTextNode(change/1000);
-            newCell.appendChild(newText);
-        }
-    }
-    setInterval('get_times()', 3000);
-</script>
 {% endblock %}

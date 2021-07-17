@@ -1,4 +1,3 @@
-from re import sub
 from flask import Flask, render_template, request, redirect, jsonify
 from flask_caching import Cache
 from google.cloud import bigquery
@@ -28,14 +27,26 @@ class Datastore():
 
 db = Datastore()
 
+def formatData(data):
+    output = []
+    for idx in range(1, len(data)):
+        output.append({'date':data[idx]['datetime'][0:8], 'lap_num':idx, 'lap_time':data[idx]['laptime']-data[idx-1]['laptime']})
+        if idx > 1:
+            output[idx-1]['difference'] = output[idx-1]['lap_time']-output[idx-2]['lap_time']
+        else:
+            output[idx-1]['difference'] = 0
+    print(output)
+    return output
+    
+
 @app.route('/')
 def index():
-    data = db.data
+    data = formatData(db.data)
     return render_template('index.html', data=data)
 
 @app.route('/_times', methods=['GET'])
 def get_times():
-    data = db.data
+    data = formatData(db.data)
     return jsonify(data)
 
 @app.route('/api/submit/time', methods=['POST'])
@@ -44,17 +55,6 @@ def add_data():
     db.add_data(time_data)
     return 'success'
 
-@app.route('/api/bq', methods=['GET'])
-def test_send():
-    db.send_to_bq()
-    return 'success'
-
 '''
-query = "INSERT INTO `testing-315021.lapTimes.testing` (laptime, date_time) VALUES ("+ str(time) +", '"+ date_time +"');"
-
-query = "SELECT * FROM `testing-315021.lapTimes.testing` LIMIT 100"
-
-query = "DELETE FROM `testing-315021.lapTimes.testing` WHERE true;"
-
 .strftime("%Y%m%d-%H%M%S")
 '''
