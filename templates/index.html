@@ -14,20 +14,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for row in data %}
-                    <tr>
-                        <td>{{ row['date'] }}</td>
-                        <td>{{ row['lap_num'] }}</td>
-                        <td>{{ row['lap_time']/1000 }} seconds</td>
-                        <td
-                        {% if row['difference'] > 0 %}
-                            style="color: green"
-                        {% else %}
-                            style="color: red"
-                        {% endif %}
-                        >{{ row['difference']/1000 }} seconds</td>
-                    </tr>
-                    {% endfor %}
                 </tbody>
             </table>
         </div>
