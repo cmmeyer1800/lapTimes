@@ -35,7 +35,6 @@ def formatData(data):
             output[idx-1]['difference'] = output[idx-1]['lap_time']-output[idx-2]['lap_time']
         else:
             output[idx-1]['difference'] = 0
-    print(output)
     return output
     
 
