@@ -8,22 +8,23 @@ app = Flask(__name__)
 
 class Datastore():
     def __init__(self):
-        self.client = bigquery.Client.from_service_account_json(r"/home/collin/code/python/lapTimes/testing-315021-0d231ce1adcd.json")
-        self.table_id = "testing-315021.lapTimes.testing_data"
+        self.client = bigquery.Client.from_service_account_json(r"/home/collin/code/python/lapTimes/laptime-dc30bfad5679.json")
+        self.table_id = "laptime.lapTimes.data"
         self.data = []
         self.current_time = ''
 
     def send_to_bq(self):
-        result = self.client.insert_rows_json(self.table_id, self.data)
+        formattedData = [{'json':self.data}]
+        result = self.client.insert_rows_json(self.table_id, formattedData)
         print(result)
 
     def delete_all_bq(self):
-        query = "DELETE FROM `testing-315021.lapTimes.testing` WHERE true;"
+        query = "DELETE FROM `laptime.lapTimes.data` WHERE true;"
         self.client.query(query)
 
     def add_data(self, data):
         time = datetime.now().strftime("%m-%d-%y %H:%M:%S")
-        self.data.append({'datetime':time, 'laptime':   data})
+        self.data.append({'datetime':time, 'laptime':data})
 
 db = Datastore()
 
@@ -52,6 +53,12 @@ def get_times():
 def add_data():
     time_data = request.get_json()['time']
     db.add_data(time_data)
+    return 'success'
+
+@app.route('/api/reset', methods=['POST'])
+def submit_collection():
+    db.send_to_bq()
+    db.data = []
     return 'success'
 
 '''
