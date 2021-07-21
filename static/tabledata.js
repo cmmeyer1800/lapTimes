@@ -1,13 +1,17 @@
-current_data = []
-
 $(document).ready( function() {
     var table = $('#lapTable').DataTable({
         searchPanes: true
     });
-    //table.searchPanes.container().prependTo(table.table().container());
-    //table.searchPanes.resizePanes();
 });
 
+var socket = io();
+socket.on('connect', function() {
+    socket.emit('message', {data: 'I\'m connected!'});
+});
+socket.on('message', function(data) {
+    console.log(data);
+});
+/*
 function updateTable(){
     $.getJSON("_times",
         function (data) {
@@ -25,4 +29,4 @@ function updateTable(){
         }
     );
 }
-setInterval('updateTable()', 3000);
+*/

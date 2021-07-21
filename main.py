@@ -1,10 +1,14 @@
 from flask import Flask, render_template, request, redirect, jsonify
 from flask_caching import Cache
+from flask_socketio import SocketIO, emit
 from google.cloud import bigquery
 from datetime import datetime
 import json
 
 app = Flask(__name__)
+app.config.update(TESTING = True, HOST = '0.0.0.0')
+app.config['SECRET_KEY'] = 'UnicornTabletCalculator'
+socketio = SocketIO(app)
 
 class Datastore():
     def __init__(self):
@@ -44,15 +48,11 @@ def index():
     data = formatData(db.data)
     return render_template('index.html', data=data)
 
-@app.route('/_times', methods=['GET'])
-def get_times():
-    data = formatData(db.data)
-    return jsonify(data)
-
 @app.route('/api/submit/time', methods=['POST'])
 def add_data():
     time_data = request.get_json()['time']
     db.add_data(time_data)
+    socketio.emit('message', 'NEW DATA')
     return 'success'
 
 @app.route('/api/reset', methods=['POST'])
@@ -60,6 +60,13 @@ def submit_collection():
     db.send_to_bq()
     db.data = []
     return 'success'
+
+@socketio.on('message')
+def handle_message(data):
+    print('received message: ' + data['data'])
+
+if __name__ == "__main__":
+    socketio.run(app)
 
 '''
 .strftime("%Y%m%d-%H%M%S")
