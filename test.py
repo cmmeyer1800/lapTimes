@@ -6,7 +6,7 @@ def main():
     for arg in sys.argv:
         if arg == '--full':
             num = 0
-            for x in range(100):
+            for x in range(11):
                 requests.post('http://localhost:5000/api/submit/time', json={"time":num})
                 num += random.randint(7000, 14000)
         if arg == '--single':

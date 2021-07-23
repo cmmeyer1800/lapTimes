@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+    <script>
+        $(document).ready( function() {
+            var table = $('#lapTable').DataTable({
+                searchPanes: true
+            });
+        });
+    </script>
+    <div class="columns">
+        <div class="column is-2"></div>
+        <div class="column is-8 has-text-centered">
+            <h1 class="title">{{ id }}</h1>
+            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="lapTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>lap Number</th>
+                        <th>Lap Time</th>
+                        <th>Difference</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                        <tr>
+                            <td>{{ row['date'] }}</td>
+                            <td>{{ row['lap_num'] }}</td>
+                            <td>{{ row['lap_time'] / 1000 }} Seconds</td>
+                            <td>{{ row['difference'] / 1000 }} Seconds</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="column is-2"></div>
+    </div>
+{% endblock %}

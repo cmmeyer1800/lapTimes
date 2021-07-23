@@ -19,4 +19,18 @@
         </div>
         <div class="column is-2"></div>
     </div>
+    <div class="modal" id="submit_modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box has-text-centered">
+                <form action="/live" method="post">
+                    <h1 class="subtitle">Please enter a name for the dataset without spaces</h1>
+                    <input class="input" name="id" type="text" placeholder="Example: Thursday_Accel"/>
+                    <input class="button is-submit" type="submit" name="submit_data" value="Submit Time">
+                </form>
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close" onclick='toggle_modal()'></button>
+    </div>
+    <button class="button" onclick='toggle_modal()'>Submit Dataset</button>
 {% endblock %}

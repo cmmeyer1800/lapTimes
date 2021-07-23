@@ -26,6 +26,11 @@ socket.on('add_data', function(lap_data) {
     }
 });
 
+function toggle_modal(){
+    var element = document.getElementById("submit_modal");
+    element.classList.toggle("is-active");
+}
+
 /*
 function updateTable(){
     $.getJSON("_times",

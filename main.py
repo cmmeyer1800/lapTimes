@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, jsonify
 from flask_caching import Cache
 from flask_socketio import SocketIO, emit, send
-from google.cloud import bigquery
 from datetime import datetime
+from firebase_admin import credentials, firestore, initialize_app
 import json
 
 app = Flask(__name__)
@@ -12,31 +12,45 @@ socketio = SocketIO(app)
 
 class Datastore():
     def __init__(self):
-        self.client = bigquery.Client.from_service_account_json(r"/home/collin/code/python/lapTimes/laptime-dc30bfad5679.json")
+        self.client = None
         self.table_id = "laptime.lapTimes.data"
         self.data = []
         self.current_time = ''
+        cred = credentials.Certificate('key.json')
+        self.default_app = initialize_app(cred)
+        self.firedb = firestore.client()
+        self.data_sets = self.firedb.collection('lap_datasets')
 
-    def __iter__(self):
-        return (x for x in self.data)
-
-    def send_to_bq(self):
-        formattedData = [{'json':self.data}]
-        result = self.client.insert_rows_json(self.table_id, formattedData)
-        print(result)
+    def send_to_db(self, dataset_name):
+        date = self.data[0]['date']
+        ints = [dataline['laptime'] for dataline in self.data]
+        json_format = {'date': date, 'data':ints}
+        self.data_sets.document(dataset_name).set(json_format)
 
     def delete_all_bq(self):
         query = "DELETE FROM `laptime.lapTimes.data` WHERE true;"
         self.client.query(query)
 
     def add_data(self, data):
-        time = datetime.now().strftime("%m-%d-%y %H:%M:%S")
-        self.data.append({'datetime':time, 'laptime':data})
+        date = datetime.now().strftime("%m-%d-%y")
+        self.data.append({'date':date, 'laptime':data})
 
     def formatted_data(self):
         output = []
         for idx in range(1, len(self.data)):
-            output.append({'date':self.data[idx]['datetime'][0:8], 'lap_num':idx, 'lap_time':self.data[idx]['laptime']-self.data[idx-1]['laptime']})
+            output.append({'date':self.data[idx]['date'], 'lap_num':idx, 'lap_time':self.data[idx]['laptime']-self.data[idx-1]['laptime']})
+            if idx > 1:
+                output[idx-1]['difference'] = output[idx-1]['lap_time']-output[idx-2]['lap_time']
+            else:
+                output[idx-1]['difference'] = 0
+        return output
+
+    def formatted_fire_data(self, input_data):
+        output = []
+        times = input_data[0]
+        date = input_data[1]
+        for idx in range(1, len(times)):
+            output.append({'date':date, 'lap_num':idx, 'lap_time':times[idx]-times[idx-1]})
             if idx > 1:
                 output[idx-1]['difference'] = output[idx-1]['lap_time']-output[idx-2]['lap_time']
             else:
@@ -54,14 +68,26 @@ def live():
     if request.method == 'GET':
         return render_template('live.html')
     elif request.method == 'POST':
-        pass
-        # Process POST
+        id = request.form.get('id')
+        db.send_to_db(id)
+        db.data = []
+        return redirect(f'/history/{id}')
     else:
-        return 'Method is not allowed'
+        return 'HTTP Method is not allowed'
+
+@app.route('/history', methods=['GET'])
+def history():
+    docs=db.data_sets.stream()
+    return str([x.id for x in docs])
 
 @app.route('/history/<id>', methods=['GET'])
-def history(id):
-    return str(id)
+def history_specific(id):
+    docs = db.data_sets.stream()
+    for doc in docs:
+        if doc.id == id:
+            input_data = (doc.get('data'), doc.get('date'))
+            return render_template('history.html', data=db.formatted_fire_data(input_data), id=id)
+    return 'Not found'
 
 @app.route('/api/submit/time', methods=['POST'])
 def add_data():
@@ -77,7 +103,3 @@ def connect():
 
 if __name__ == "__main__":
     socketio.run(app)
-
-'''
-.strftime("%Y%m%d-%H%M%S")
-'''
