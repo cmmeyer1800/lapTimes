@@ -4,6 +4,11 @@
         $(document).ready( function() {
             var table = $('#lapTable').DataTable({
                 searchPanes: true
+            
+            });
+            $("#download").click(function (e) {
+                e.preventDefault();
+                window.location.href = "{{ id }}/excel.csv";
             });
         });
     </script>
@@ -34,4 +39,5 @@
         </div>
         <div class="column is-2"></div>
     </div>
+    <a class="button" id="download" href="#">Download CSV File</a>
 {% endblock %}

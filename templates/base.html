@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Lap Times</title>
+    <link rel="shortcut icon" type="image/jpg" href="{{ url_for('static', filename='motorsport.png') }}"/>
     <meta name="description" content="Illini Motorsport Laptimes Database">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -24,7 +25,7 @@
         <div class="column is-one-fifth is-offset-two-fifths">
           <div class="has-text-centered">
             <figure class="image is-inline-block">
-                <img src="{{ url_for('static', filename='motorsport.png') }}">
+                <a href="/"><img src="{{ url_for('static', filename='motorsport.png') }}"></a>
             </figure>
           </div>
         </div>

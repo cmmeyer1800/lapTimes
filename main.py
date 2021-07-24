@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, jsonify
+from flask import Flask, render_template, request, redirect, make_response
 from flask_caching import Cache
 from flask_socketio import SocketIO, emit, send
 from datetime import datetime
@@ -61,7 +61,7 @@ db = Datastore()
     
 @app.route('/', methods=['GET'])
 def index():
-    return redirect('live')
+    return render_template('index.html')
 
 @app.route('/live', methods=['GET', 'POST'])
 def live():
@@ -78,7 +78,7 @@ def live():
 @app.route('/history', methods=['GET'])
 def history():
     docs=db.data_sets.stream()
-    return str([x.id for x in docs])
+    return render_template('history_index.html', docs=docs)
 
 @app.route('/history/<id>', methods=['GET'])
 def history_specific(id):
@@ -87,6 +87,23 @@ def history_specific(id):
         if doc.id == id:
             input_data = (doc.get('data'), doc.get('date'))
             return render_template('history.html', data=db.formatted_fire_data(input_data), id=id)
+    return 'Not found'
+
+@app.route('/history/<id>/excel.csv', methods=['GET'])
+def history_specific_excel(id):
+    docs = db.data_sets.stream()
+    for doc in docs:
+        if doc.id == id:
+            csv = ''
+            input_data = (doc.get('data'), doc.get('date'))
+            data=db.formatted_fire_data(input_data)
+            for row in data:
+                csv += f'{row["date"]}, {row["lap_num"]}, {row["lap_time"]}, {row["difference"]}\n'
+            response = make_response(csv)
+            cd = 'attachment; filename='+ id +'.csv'
+            response.headers['Content-Disposition'] = cd 
+            response.mimetype='text/csv'
+            return response
     return 'Not found'
 
 @app.route('/api/submit/time', methods=['POST'])

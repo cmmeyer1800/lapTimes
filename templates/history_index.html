@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="has-text-centered">
+    <h1 class="title">All Datasets</h1>
+    <hr>
+    {% for doc in docs %}
+    <h2 class="subtitle"><a href="/history/{{ doc.id }}">{{ doc.id }}   :   {{ doc.get('date') }}</a></h2>
+    {% endfor %}
+</div>
+
+{% endblock %}
