@@ -20,6 +20,14 @@
 </head>
 
 <body">
+  <script>
+    $(document).ready(function() {
+      $(".navbar-burger").click(function() {
+        $(".navbar-burger").toggleClass("is-active");
+        $(".navbar-menu").toggleClass("is-active");
+      });
+    });
+  </script>
     <div class="box">
         <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
