@@ -1,0 +1,82 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Lap Times</title>
+    <meta name="description" content="Displaying data in the web">
+    <meta name="author" content="cm1800">
+
+    <meta property="og:title" content="Data Analytics">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="localhost:5000">
+    <meta property="og:description" content="Displaying data in the web">
+
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bulma.min.css') }}">
+    <script src="{{ url_for('static', filename='jquery-3.6.0.min.js') }}"></script>
+</head>
+
+<body">
+    <div class="box">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="{{ url_for('main.index') }}">
+            <h2 class="title" style="color: #e37622">Motorsport Laptimes</h2>
+          </a>
+      
+          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>  
+        </div>
+      
+        <div id="navbarBasicExample" class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item" href="{{ url_for('main.docs') }}">
+              Documentation
+            </a>
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link">
+                More
+              </a>
+              <div class="navbar-dropdown">
+                <a class="navbar-item">
+                  About
+                </a>
+                <hr class="navbar-divider">
+                <a class="navbar-item">
+                  Report an issue
+                </a>
+              </div>
+            </div>
+          </div>
+      
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <div class="buttons">
+                {% if not current_user.is_authenticated %}
+                <a class="button is-primary" href="{{ url_for('auth.signup') }}">
+                  <strong>Sign up</strong>
+                </a>
+                <a class="button is-light" href="{{ url_for('auth.login') }}">
+                  Log in
+                </a>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                  <a class="button is-danger" href="{{ url_for('auth.logout') }}">
+                    Logout
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    {% block content %}{% endblock %}
+</body>
+</html>
