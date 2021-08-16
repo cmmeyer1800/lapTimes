@@ -1,12 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='dataTables.bulma.min.css') }}">
+<script src="{{ url_for('static', filename='jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='dataTables.bulma.min.js') }}"></script>
 <script src="{{ url_for('static', filename='live.js') }}"></script>
 <div class="container">
     <div class="box">
         <div class="row">
             <div class="col-4">
-                <h1 class="text-center">Hello World!</h1>
+                <table id="lapdata" class="table is-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>name</th>
+                            <th>position</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
