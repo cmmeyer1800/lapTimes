@@ -1,6 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script>
+    $(document).ready(function() {
+        var table = $('#lapdata').DataTable();
+        $.get("{{url_for("api.getdataformatted")}}", function(data){
+            let n = data.data.length;
+            for(var i = 0; i < n; i++){
+                table.row.add(data.data[i]).draw(false);
+            }
+        })
+    });
+</script>
 <link rel="stylesheet" href="{{ url_for('.static', filename='dataTables.bulma.min.css') }}">
 <script src="{{ url_for('main.static', filename='jquery.dataTables.min.js') }}"></script>
 <script src="{{ url_for('main.static', filename='dataTables.bulma.min.js') }}"></script>
@@ -12,8 +23,8 @@
                 <table id="lapdata" class="table is-striped" style="width:100%">
                     <thead>
                         <tr>
-                            <th>name</th>
-                            <th>position</th>
+                            <th>Date</th>
+                            <th>Time</th>
                         </tr>
                     </thead>
                 </table>

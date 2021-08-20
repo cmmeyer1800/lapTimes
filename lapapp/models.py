@@ -11,3 +11,4 @@ class Data(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.String(10))
     time = db.Column(db.Integer)
+    
