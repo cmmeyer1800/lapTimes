@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, redirect, sessions, url_for, request, flash, session
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session
+from werkzeug.security import check_password_hash
 from ..models import User
 from flask_login import login_user, logout_user, login_required
 from .. import db
@@ -27,7 +27,7 @@ def login_post():
     if 'next' in session:
         next = session['next']
         session.pop('next', None)
-        return redirect(url_for(f'main.{next[1:]}'))
+        return redirect(url_for(f'{next[1:]}'))
     return redirect(url_for('main.index'))
 
 @auth.route('/logout')
