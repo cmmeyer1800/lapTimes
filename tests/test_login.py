@@ -2,5 +2,5 @@ import os
 
 def test_login(client):
     form = {'name': os.environ['USER'], 'password': os.environ['PASS']}
-    response = client.post('/login', data=form)
-    assert response.headers['Location'] != 'http://localhost/login'
+    client.post('/login', data=form)
+    assert login_manager.current_user.username == os.environ['USER']

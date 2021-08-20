@@ -1,8 +1,12 @@
 from flask import render_template, Blueprint, redirect
 from flask_login import login_required
-from . import db
+from .. import db
 
-main = Blueprint('main', __name__)
+main = Blueprint(
+    'main', __name__,
+    template_folder='templates',
+    static_folder='static'
+)
 
 @main.route('/live', methods=['GET'])
 @login_required

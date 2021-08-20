@@ -1,6 +1,5 @@
 import os
 import tempfile
-
 import pytest
 
 from lapapp import create_app, db

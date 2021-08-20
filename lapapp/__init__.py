@@ -7,7 +7,7 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
 
-    app.config['SECRET_KEY'] = 'secret-key-goes-here'
+    app.config['SECRET_KEY'] = 'TestingSecretKey'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     app.config['USE_SESSION_FOR_NEXT'] = True
@@ -19,16 +19,14 @@ def create_app():
     login_manager.init_app(app)
     
     from .models import User
-    from .models import Data
 
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-    from .auth import auth as auth_blueprint
-    app.register_blueprint(auth_blueprint)
-
-    from .main import main as main_blueprint
-    app.register_blueprint(main_blueprint)
+    from .auth import routes as auth_routes
+    app.register_blueprint(auth_routes.auth, url_prefix="/auth")
+    from .main import routes as main_routes
+    app.register_blueprint(main_routes.main, url_prefix="/main")
 
     return app
