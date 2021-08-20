@@ -2,5 +2,6 @@ import os
 
 def test_login(client):
     form = {'name': os.environ['USER'], 'password': os.environ['PASS']}
-    client.post('/login', data=form)
-    assert login_manager.current_user.username == os.environ['USER']
+    client.post('/auth/login', data=form)
+    res = client.get("/main/live")
+    assert res.headers.get("Location") == "http://localhost/main/live"
