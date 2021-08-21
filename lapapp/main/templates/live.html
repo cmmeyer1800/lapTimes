@@ -5,6 +5,7 @@
     $(document).ready(function() {
         var table = $('#lapdata').DataTable();
         $.get('{{url_for("api.getdataformatted")}}', function(data){
+            console.log(data.data)
             let n = data.data.length;
             for(var i = 0; i < n; i++){
                 table.row.add(data.data[i]).draw(false);
@@ -20,12 +21,13 @@
     <div class="box">
         <div class="row">
             <div class="col-4">
-                <table id="lapdata" class="table is-striped" style="width:100%">
+                <table id="lapdata" class="table is-striped is-hoverable" style="width:100%">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Date</th>
                             <th>Time</th>
+                            <th>Difference</th>
                         </tr>
                     </thead>
                 </table>
