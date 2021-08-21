@@ -24,10 +24,6 @@ def login_post():
         flash('Please check your login details and try again.')
         return redirect(url_for('auth.login'))
     login_user(user, remember=remember)
-    if 'next' in session:
-        next = session['next']
-        session.pop('next', None)
-        return redirect(url_for(f'{next[1:]}'))
     return redirect(url_for('main.index'))
 
 @auth.route('/logout')

@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint, redirect, session
+from flask import render_template, Blueprint, redirect, url_for
 from flask_login import login_required
 from .. import db
 
@@ -13,15 +13,15 @@ main = Blueprint(
 def live():
     return render_template('live.html')
 
-@main.route('/history', methods=['GET'])
-def history():
-    return render_template('history.html')
-
 @main.route('/', methods=['GET'])
 def index():
-    return render_template('index.html')
+    return redirect(url_for("main.live"))
 
-@main.route('/docs', methods=['GET'])
+@main.route('/records', methods=['GET'])
 @login_required
-def docs():
-    return render_template('docs.html')
+def records():
+    return render_template('records.html')
+
+@main.route('/issue', methods=['GET'])
+def issue():
+    return render_template('issue.html')

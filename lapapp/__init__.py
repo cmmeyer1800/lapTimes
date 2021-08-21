@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
@@ -10,7 +10,6 @@ def create_app():
     app.config['SECRET_KEY'] = 'TestingSecretKey'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-    app.config['USE_SESSION_FOR_NEXT'] = True
 
     db.init_app(app)
 
@@ -30,5 +29,9 @@ def create_app():
     app.register_blueprint(main_routes.main, url_prefix="/main")
     from .api import routes as api_routes
     app.register_blueprint(api_routes.api, url_prefix="/api")
+
+    @app.route("/", methods=["GET"])
+    def index():
+        return redirect(url_for("main.index"))
 
     return app

@@ -4,7 +4,7 @@
 <script>
     $(document).ready(function() {
         var table = $('#lapdata').DataTable();
-        $.get("{{url_for("api.getdataformatted")}}", function(data){
+        $.get('{{url_for("api.getdataformatted")}}', function(data){
             let n = data.data.length;
             for(var i = 0; i < n; i++){
                 table.row.add(data.data[i]).draw(false);
@@ -23,6 +23,7 @@
                 <table id="lapdata" class="table is-striped" style="width:100%">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Date</th>
                             <th>Time</th>
                         </tr>

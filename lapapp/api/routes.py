@@ -29,11 +29,13 @@ def getdata():
 @api.route("/getdataformatted", methods=["GET"])
 def getdataformatted():
     all_data = Data.query.all()
-    ret = {"data":[(f"{x.date[0:2]}-{x.date[2:4]}-{x.date[4:8]}", x.time/1000) for x in all_data]}
+    real_times = []
+    for idx in range(1, len(all_data)):
+        real_times.append([all_data[idx].id-2, f"{all_data[idx].date[0:2]}-{all_data[idx].date[2:4]}-{all_data[idx].date[4:8]}", (all_data[idx].time-all_data[idx-1].time)/1000])
+    ret = {"data": real_times}
     return ret
 
 @api.route("/deldata", methods=['GET'])
-@login_required
 def deldata():
     Data.query.delete()
     db.session.commit()

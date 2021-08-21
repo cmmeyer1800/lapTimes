@@ -47,19 +47,19 @@
             <a class="navbar-item" href="{{ url_for('main.live') }}">
               Live Data
             </a>
-            <a class="navbar-item" href="{{ url_for('main.docs') }}">
-              Documentation
+            <a class="navbar-item" href="{{ url_for('main.records') }}">
+              Records
             </a>
             <div class="navbar-item has-dropdown is-hoverable">
               <a class="navbar-link">
                 More
               </a>
               <div class="navbar-dropdown">
-                <a class="navbar-item">
+                <a class="navbar-item" href="http://wiki.motorsports.illinois.edu/display/EL/Lap+Trigger+2021-2022">
                   About
                 </a>
                 <hr class="navbar-divider">
-                <a class="navbar-item">
+                <a class="navbar-item" href="{{ url_for('main.issue') }}">
                   Report an issue
                 </a>
               </div>

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script src="{{ url_for('main.static', filename='index.js') }}"></script>
+<div class="container">
+    <div class="box">
+        <div class="row">
+            <div class="col-4">
+                <h1 class="title has-text-centered">To report issue go to:</h1>
+                <a class="subtitle has-text-centered" href="https://github.com/cmmeyer1800/lapTimes/issues">Github</a>
+                <br>
+                <a class="subtitle has-text-centered" href="http://wiki.motorsports.illinois.edu/display/EL/Lap+Trigger+2021-2022">Wiki</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
