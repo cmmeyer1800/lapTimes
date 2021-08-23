@@ -9,4 +9,4 @@ def test_getdata(client):
     client.post("/api/submitdata", json=submit_data)
     res = client.get('/api/getdata')
     data = json.loads(res.data)
-    assert data['data'] == [["010120001", 0]]
+    assert data['data'] == [[1, "010120001", 0]]
