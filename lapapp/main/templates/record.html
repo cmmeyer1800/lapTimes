@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script>
+    $(document).ready(function() {
+        var table = $('#lapdata').DataTable();
+    });
+</script>
+<link rel="stylesheet" href="{{ url_for('.static', filename='dataTables.bulma.min.css') }}">
+<script src="{{ url_for('main.static', filename='jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('main.static', filename='dataTables.bulma.min.js') }}"></script>
+<script src="{{ url_for('main.static', filename='live.js') }}"></script>
+<div class="container">
+    <div class="box">
+        <div class="row">
+            <div class="col-4">
+                <table id="lapdata" class="table is-striped is-hoverable" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Difference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data %}
+                            <tr>
+                                <td>{{ row[0] }}</td>
+                                <td>{{ row[1] }}</td>
+                                <td>{{ row[2] }}</td>
+                                <td>{{ row[3] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

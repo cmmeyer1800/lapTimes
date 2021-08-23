@@ -23,7 +23,7 @@ def submitdata():
 @api.route("/getdata", methods=["GET"])
 def getdata():
     all_data = Data.query.all()
-    ret = {"data":[(x.date, x.time) for x in all_data]}
+    ret = {"data":[[x.id, x.date, x.time] for x in all_data]}
     return ret
 
 @api.route("/getdataformatted", methods=["GET"])
