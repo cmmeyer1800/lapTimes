@@ -31,7 +31,7 @@ def getdataformatted():
     all_data = Data.query.all()
     real_times = []
     for idx in range(1, len(all_data)):
-        real_times.append([all_data[idx].id-2, f"{all_data[idx].date[0:2]}-{all_data[idx].date[2:4]}-{all_data[idx].date[4:8]}", (all_data[idx].time-all_data[idx-1].time)/1000])
+        real_times.append([all_data[idx].id-2, f"{all_data[idx].date[0:2]}-{all_data[idx].date[2:4]}-{all_data[idx].date[4:8]}", (all_data[idx].time-all_data[idx-1].time)])
         if idx > 1:
             real_times[-1].append(real_times[-1][2]-real_times[-2][2])
         else:

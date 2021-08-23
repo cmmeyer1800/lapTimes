@@ -8,6 +8,17 @@
             console.log(data.data)
             let n = data.data.length;
             for(var i = 0; i < n; i++){
+                data.data[i][2] = data.data[i][2]/1000
+                data.data[i][3] = data.data[i][3]/1000
+                if(i > 1){
+                    value = data.data[i][3];
+                    if(value > 0){
+                        data.data[i][3] = '<p style="color:red;">'+value.toString()+'</p>';
+                    }
+                    else{
+                        data.data[i][3] = '<p style="color:green;">'+value.toString()+'</p>';
+                    }
+                }
                 table.row.add(data.data[i]).draw(false);
             }
         })
