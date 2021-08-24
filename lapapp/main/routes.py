@@ -8,7 +8,7 @@ import os
 
 class Storage:
     #~/flask_aws/lapapp/jsons/
-    folder_path = "/home/collin/code/web/flask/laptimes/lapapp/jsons/"
+    folder_path = "/home/ubuntu/flask_aws/lapapp/jsons/"
     
     @staticmethod
     def store(file_name):
@@ -67,7 +67,7 @@ def records():
 @main.route('/records/<id>', methods=['GET'])
 @login_required
 def records_specific(id):
-    return render_template('record.html', data=Storage.get(id))
+    return render_template('record.html', data=Storage.get(id), title=id)
 
 @main.route('/issue', methods=['GET'])
 def issue():
