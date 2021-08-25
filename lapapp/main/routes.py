@@ -6,6 +6,9 @@ from .. import db
 import json
 from ..api.routes import getdata, getdataformatted
 import os
+import boto3
+from botocore.exceptions import ClientError
+
 
 class Storage:
     #"/home/ubuntu/flask_aws/lapapp/jsons/"
@@ -32,6 +35,17 @@ class Storage:
                 real_times[-1].append("N/A")
         return real_times
 
+    @staticmethod
+    def send_to_s3():
+        s3_client = boto3.client('s3')
+        for file in os.listdir(Storage.folder_path):
+            file_path = os.path.join(Storage.folder_path, file)
+            try:
+               s3_client.upload_file(file_path, 'motorsportlaptimesbackupstorage', file)
+            except ClientError as e:
+                print(e)
+                return 'failure, check logs'
+        return 'success'
 
 
 main = Blueprint(
@@ -97,3 +111,8 @@ def records_specific_excel(id):
 @main.route('/issue', methods=['GET'])
 def issue():
     return render_template('issue.html')
+
+@main.route('/backup_data', methods=['GET'])
+def backup():
+    status = Storage.send_to_s3()
+    return status
