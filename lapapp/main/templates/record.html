@@ -10,6 +10,10 @@
         $("#closeModal").click(function(){
             $("#formModal").toggleClass('is-active')
         })
+        $("#download").click(function (e) {
+                e.preventDefault();
+                window.location.href = "{{ title }}/excel.csv";
+        });
     });
 </script>
 <link rel="stylesheet" href="{{ url_for('.static', filename='dataTables.bulma.min.css') }}">
@@ -46,6 +50,7 @@
                 </table>
             </div>
         </div>
+        <a class="button is-medium is-info" id="download" href="#">Download CSV File</a>
     </div>
 </div>
 <div class="modal" id="formModal">

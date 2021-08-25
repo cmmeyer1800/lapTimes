@@ -1,10 +1,10 @@
-from flask import render_template, Blueprint, redirect, url_for, request
+from flask import render_template, Blueprint, redirect, url_for, request, make_response
 from flask_login import login_required
 from werkzeug.utils import find_modules
 from ..models import Data
 from .. import db
 import json
-from ..api.routes import getdata
+from ..api.routes import getdata, getdataformatted
 import os
 
 class Storage:
@@ -25,9 +25,9 @@ class Storage:
             all_data = json.load(FILE)['data']
         real_times = []
         for idx in range(1, len(all_data)):
-            real_times.append([all_data[idx][0]-2, f"{all_data[idx][1][0:2]}-{all_data[idx][1][2:4]}-{all_data[idx][1][4:8]}", (all_data[idx][2]-all_data[idx-1][2])/1000])
+            real_times.append([all_data[idx][0]-2, f"{all_data[idx][1][0:2]}-{all_data[idx][1][2:4]}-{all_data[idx][1][4:8]}", round((all_data[idx][2]-all_data[idx-1][2])/1000, 6)])
             if idx > 1:
-                real_times[-1].append(real_times[-1][2]-real_times[-2][2])
+                real_times[-1].append(round(real_times[-1][2]-real_times[-2][2], 6))
             else:
                 real_times[-1].append("N/A")
         return real_times
@@ -82,6 +82,17 @@ def records_specific_post(id):
     new_name = f"{request.form.get('name')}.json"
     os.rename(os.path.join(Storage.folder_path, id), os.path.join(Storage.folder_path, new_name))
     return redirect(new_name)
+
+@main.route('/records/<id>/excel.csv', methods=['GET'])
+def records_specific_excel(id):
+    csv = 'id, date, time, difference\n'
+    for row in Storage.get(id):
+        csv += f"{row[0]},{row[1]},{row[2]},{row[3]}\n"
+    response = make_response(csv)
+    cd = 'attachment; filename='+ id +'.csv'
+    response.headers['Content-Disposition'] = cd 
+    response.mimetype='text/csv'
+    return response
 
 @main.route('/issue', methods=['GET'])
 def issue():
