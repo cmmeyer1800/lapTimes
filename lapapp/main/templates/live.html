@@ -17,6 +17,11 @@
         $("#openModal").click(function(){
             $("#formModal").addClass("is-active");
         })
+        $(document).on('keydown', function(e) {
+            if(e.key == "Escape"){
+                $("#formModal").removeClass("is-active");
+            }
+        });
     });
 </script>
 <link rel="stylesheet" href="{{ url_for('.static', filename='dataTables.bulma.min.css') }}">
