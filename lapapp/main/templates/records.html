@@ -1,12 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+<script>
+    $(document).ready(function() {
+        $("#closeModal").click(function(){
+            $("#formModal").removeClass("is-active");
+        })
+        $("#openModal").click(function(){
+            $("#formModal").addClass("is-active");
+        })
+    });
+</script>
 <div class="has-text-centered">
 <h1 class="title">Select A Dataset To View</h1>
 <hr>
 {% for file in files %}
-    <a class="subtitle" href="/main/records/{{ file }}">{{ file }}</a>
+    <form method="POST" action="/main/records" onsubmit="return confirm('Are you SURE you want to delete the dataset, this cannot be undone');">
+        <a class="button is-primary is-large" href="/main/records/{{ file }}">{{ file }}</a>
+        <button class="button is-danger is-large" name="{{ file }}">X</button>
+    </form>    
+    <br>
     <br>
 {% endfor %}
 </div>

@@ -4,6 +4,12 @@
 <script>
     $(document).ready(function() {
         var table = $('#lapdata').DataTable();
+        $("#nameChange").click(function(){
+            $("#formModal").toggleClass('is-active')
+        })
+        $("#closeModal").click(function(){
+            $("#formModal").toggleClass('is-active')
+        })
     });
 </script>
 <link rel="stylesheet" href="{{ url_for('.static', filename='dataTables.bulma.min.css') }}">
@@ -14,7 +20,10 @@
     <div class="box">
         <div class="row">
             <div class="col-4">
-		<h3 class="subtitle has-text-centered">{{ title }}</h3>
+            <div class="has-text-centered">
+                <h3 class="title">{{ title }}</h3>
+                <button class="button" id="nameChange">Change Dataset Name</button>
+            </div>
                 <table id="lapdata" class="table is-striped is-hoverable" style="width:100%">
                     <thead>
                         <tr>
@@ -38,5 +47,22 @@
             </div>
         </div>
     </div>
+</div>
+<div class="modal" id="formModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="box">
+            <form method="POST" action="/main/records/{{ title }}">
+                <h6 class="subtitle is-6">Enter a name not containing spaces</h6>
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-large" type="name" name="name" placeholder="Dataset Name" autofocus="">
+                    </div>
+                </div>
+                <button class="button is-block is-info is-large is-fullwidth">Submit New Dataset Name</button>
+            </form>
+        </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close" id="closeModal"></button>
 </div>
 {% endblock %}

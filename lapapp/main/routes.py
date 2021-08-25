@@ -1,5 +1,6 @@
 from flask import render_template, Blueprint, redirect, url_for, request
 from flask_login import login_required
+from werkzeug.utils import find_modules
 from ..models import Data
 from .. import db
 import json
@@ -7,12 +8,12 @@ from ..api.routes import getdata
 import os
 
 class Storage:
-    #~/flask_aws/lapapp/jsons/
-    folder_path = "/home/ubuntu/flask_aws/lapapp/jsons/"
+    #"/home/ubuntu/flask_aws/lapapp/jsons/"
+    folder_path = "/home/collin/code/web/flask/laptimes/lapapp/jsons/"
     
     @staticmethod
     def store(file_name):
-        path = f"{Storage.folder_path}{file_name}"
+        path = os.path.join(Storage.folder_path, file_name)
         json_data = getdata()
         with open(path, 'w') as FILE:
             json.dump(json_data, FILE, indent=4, separators=(',', ': '))
@@ -29,7 +30,6 @@ class Storage:
                 real_times[-1].append(real_times[-1][2]-real_times[-2][2])
             else:
                 real_times[-1].append("N/A")
-        print(real_times)
         return real_times
 
 
@@ -64,10 +64,24 @@ def records():
     files = os.listdir(Storage.folder_path)
     return render_template('records.html', files=files)
 
+@main.route('/records', methods=['POST'])
+@login_required
+def records_post():
+    record_name = [x for x in request.form.lists()][0][0]
+    os.remove(os.path.join(Storage.folder_path, record_name))
+    return redirect(url_for('main.records'))
+
 @main.route('/records/<id>', methods=['GET'])
 @login_required
 def records_specific(id):
     return render_template('record.html', data=Storage.get(id), title=id)
+
+@main.route('/records/<id>', methods=['POST'])
+@login_required
+def records_specific_post(id):
+    new_name = f"{request.form.get('name')}.json"
+    os.rename(os.path.join(Storage.folder_path, id), os.path.join(Storage.folder_path, new_name))
+    return redirect(new_name)
 
 @main.route('/issue', methods=['GET'])
 def issue():
