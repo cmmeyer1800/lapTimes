@@ -46,21 +46,24 @@ def getdata():
 def getdataformatted():
     all_data = Data.query.all()
     real_times = []
-    for idx in range(1, len(all_data)):
-        real_times.append(
-            [
-                all_data[idx].id - 2,
-                # f"{all_data[idx].date[0:2]}-{all_data[idx].date[2:4]}-{all_data[idx].date[4:8]}",
-                all_data[idx].date,
-                round((all_data[idx].time - all_data[idx - 1].time) / 1000, 6),
-            ]
-        )
-        if idx > 1:
-            real_times[-1].append(round(real_times[-1][2] - real_times[-2][2], 6))
+    for idx, val in enumerate(all_data):
+        if idx == 0:
+            real_times.append([val.id, val.date, val.time, "N/A"])
         else:
-            real_times[-1].append("N/A")
+            real_times.append(
+                [
+                    val.id,
+                    val.date,
+                    val.time,
+                    round((val.time - all_data[idx - 1].time), 6),
+                ]
+            )
     ret = {"data": real_times}
     return ret
+    # all_data = [[0, data.date, data.time, 0] for data in Data.query.all()]
+    # print(all_data)
+    # ret = {"data": all_data}
+    # return ret
 
 
 @api.route("/deldata", methods=["GET"])

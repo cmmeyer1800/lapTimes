@@ -27,18 +27,18 @@ class Storage:
         with open(path, "r") as FILE:
             all_data = json.load(FILE)["data"]
         real_times = []
-        for idx in range(1, len(all_data)):
-            real_times.append(
-                [
-                    all_data[idx][0] - 2,
-                    f"{all_data[idx][1][0:2]}-{all_data[idx][1][2:4]}-{all_data[idx][1][4:8]}",
-                    round((all_data[idx][2] - all_data[idx - 1][2]) / 1000, 6),
-                ]
-            )
-            if idx > 1:
-                real_times[-1].append(round(real_times[-1][2] - real_times[-2][2], 6))
+        for idx, val in enumerate(all_data):
+            if idx == 0:
+                real_times.append([val[0], val[1], val[2], "N/A"])
             else:
-                real_times[-1].append("N/A")
+                real_times.append(
+                    [
+                        val[0],
+                        val[1],
+                        val[2],
+                        round((val[2] - all_data[idx - 1][2]), 6),
+                    ]
+                )
         return real_times
 
     @staticmethod
